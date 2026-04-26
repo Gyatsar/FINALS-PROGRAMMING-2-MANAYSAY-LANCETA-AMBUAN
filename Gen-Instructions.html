@@ -825,41 +825,37 @@
 
     <div class="todo-callout" style="border-left-color: var(--accent3); color: var(--accent3); background: rgba(224,92,106,0.06); border-color: rgba(224,92,106,0.25);">
       <strong>⚠ TODO — Student 3</strong>
-      Implement all seven statistical functions below the comment block in the JS section.
-      Then call <code>renderStats(window.DS)</code> inside <code>onDataReady()</code>.
+      Implement all seven statistical functions and <code>renderStats(window.DS)</code>.
+      Target field: <code>rating</code> (User Rating). Correlation: <code>price</code> vs <code>rating</code>.
       All placeholder "—" values below should be replaced by computed results.
     </div>
 
-    <!-- Summary stat cards -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label">Mean Score</div>
+        <div class="stat-label">Mean Rating</div>
         <div class="stat-value" id="statMean"><span class="stat-placeholder">—</span></div>
-        <div class="stat-sub">Final Score</div>
+        <div class="stat-sub">User Rating</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Median Score</div>
+        <div class="stat-label">Median Rating</div>
         <div class="stat-value" id="statMedian"><span class="stat-placeholder">—</span></div>
-        <div class="stat-sub">Final Score</div>
+        <div class="stat-sub">User Rating</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Std Deviation</div>
         <div class="stat-value" id="statStdDev"><span class="stat-placeholder">—</span></div>
-        <div class="stat-sub">Final Score</div>
+        <div class="stat-sub">User Rating</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Mode</div>
         <div class="stat-value" id="statMode"><span class="stat-placeholder">—</span></div>
-        <div class="stat-sub">Final Score</div>
+        <div class="stat-sub">User Rating</div>
       </div>
     </div>
 
-    <!-- Detailed analysis panels -->
     <div class="analysis-row">
-
-      <!-- Descriptive stats table -->
       <div class="analysis-panel">
-        <h4>Descriptive Statistics — Final Score</h4>
+        <h4>Descriptive Statistics — User Rating</h4>
         <ul class="stat-list">
           <li><span class="key">Count (n)</span>        <span class="val" id="dCount">—</span></li>
           <li><span class="key">Min</span>              <span class="val" id="dMin">—</span></li>
@@ -869,10 +865,8 @@
           <li><span class="key">Std Dev (σ)</span>      <span class="val" id="dStdDev">—</span></li>
         </ul>
       </div>
-
-      <!-- Correlation & regression -->
       <div class="analysis-panel">
-        <h4>Correlation &amp; Regression (Study Hours → Score)</h4>
+        <h4>Correlation &amp; Regression (Price → Rating)</h4>
         <ul class="stat-list">
           <li><span class="key">Pearson r</span>        <span class="val" id="rPearson">—</span></li>
           <li><span class="key">Interpretation</span>   <span class="val" id="rInterp">—</span></li>
@@ -882,8 +876,7 @@
           <li><span class="key">Equation</span>         <span class="val" id="rEquation">—</span></li>
         </ul>
       </div>
-
-    </div><!-- /analysis-row -->
+    </div>
   </section>
 
 </main>
@@ -1505,8 +1498,12 @@ function loadDataset() {
   // Hint: renderTable(window.DS);
   // Hint: document.getElementById('rowCount').textContent = window.DS.length + ' rows';
   // Hint: onDataReady();
+  window.DS = [...RAW_DATA];
+  renderTable(window.DS);
+  document.getElementById('rowCount').textContent = window.DS.length + ' rows';
+  onDataReady();
 
-  console.warn("⚠ Student 1: loadDataset() is not yet implemented.");
+   console.log("✅ loadDataset() complete — loaded", window.DS.length, "Amazon bestseller records.");
 }
 
 /**
@@ -1534,7 +1531,51 @@ function loadDataset() {
  */
 function renderTable(data) {
   // TODO: Implement this function
-  console.warn("⚠ Student 1: renderTable() is not yet implemented.");
+    const tbody = document.getElementById('tableBody');
+ 
+  // Step 1: Clear any existing rows
+  tbody.innerHTML = '';
+ 
+  // Step 2: Show "no results" if filtered data is empty
+  if (!data || data.length === 0) {
+    const emptyRow = document.createElement('tr');
+    emptyRow.innerHTML = `
+      <td colspan="8" style="text-align:center; color:var(--text-dim); font-family:var(--mono); padding:40px;">
+        ⚠ No results found. Try a different filter.
+      </td>
+    `;
+    tbody.appendChild(emptyRow);
+    return;
+  }
+ 
+  // Step 3: Build one <tr> per book
+  data.forEach((book, index) => {
+    const row = document.createElement('tr');
+ 
+    // Genre CSS class: "Fiction" → purple, "Non Fiction" → amber
+    const genreClass = book.genre === 'Fiction' ? 'genre-fiction' : 'genre-nonfiction';
+ 
+    // Truncate very long titles for display (keep full title in a title attribute)
+    const displayName = book.name.length > 60
+      ? book.name.substring(0, 57) + '...'
+      : book.name;
+ 
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td title="${book.name}">${displayName}</td>
+      <td>${book.author}</td>
+      <td class="numeric">${book.rating.toFixed(1)}</td>
+      <td class="numeric">${book.reviews.toLocaleString()}</td>
+      <td class="numeric">$${book.price}</td>
+      <td class="numeric">${book.year}</td>
+      <td class="${genreClass}">${book.genre}</td>
+    `;
+ 
+    tbody.appendChild(row);
+  });
+ 
+  // Step 4: Update the row count badge
+  document.getElementById('rowCount').textContent = data.length + ' rows';
 }
 
 /**
@@ -1554,7 +1595,36 @@ function renderTable(data) {
  */
 function applyFilterSort() {
   // TODO: Implement this function
-  console.warn("⚠ Student 1: applyFilterSort() is not yet implemented.");
+  // Step 1: Read the filter input (case-insensitive)
+  const filterText = document.getElementById('filterInput').value.trim().toLowerCase();
+ 
+  // Step 2: Read the selected sort key
+  const sortKey = document.getElementById('sortSelect').value;
+ 
+  // Step 3: Filter window.DS by title OR author substring match
+  let filtered = window.DS.filter(book => {
+    if (!filterText) return true;
+    return book.name.toLowerCase().includes(filterText) ||
+           book.author.toLowerCase().includes(filterText);
+  });
+ 
+  // Step 4: Sort the filtered results
+  if (sortKey) {
+    filtered = filtered.slice().sort((a, b) => {
+      if (sortKey === 'name' || sortKey === 'author' || sortKey === 'genre') {
+        // Alphabetical ascending for string fields
+        return a[sortKey].localeCompare(b[sortKey]);
+      } else {
+        // Numeric descending for rating, reviews, price, year
+        return b[sortKey] - a[sortKey];
+      }
+    });
+  }
+ 
+  // Step 5: Re-render the table with filtered + sorted data
+  renderTable(filtered);
+ 
+  console.log(`applyFilterSort(): filter="${filterText}", sort="${sortKey}", results=${filtered.length}`);
 }
 
 /**
@@ -1570,8 +1640,22 @@ function applyFilterSort() {
  */
 function resetTable() {
   // TODO: Implement this function
-  console.warn("⚠ Student 1: resetTable() is not yet implemented.");
+   // Step 1: Clear the filter input
+  document.getElementById('filterInput').value = '';
+ 
+  // Step 2: Reset the sort dropdown
+  document.getElementById('sortSelect').value = '';
+ 
+  // Step 3: Re-render with the full dataset
+  renderTable(window.DS);
+ 
+  console.log("resetTable(): table restored to full dataset.");
 }
+ 
+/* Student 1 entry point */
+document.addEventListener('DOMContentLoaded', () => {
+  loadDataset();
+});
 
 /* Student 1 entry point — runs when DOM is ready */
 document.addEventListener('DOMContentLoaded', () => {
