@@ -1940,6 +1940,48 @@ function drawHistogram(canvasId, data) {
  *  - Cutout: '55%' for doughnut style
  */
 function drawPieChart(canvasId, data) {
+  const counts = {};
+  data.forEach(d => { counts[d.genre] = (counts[d.genre] || 0) + 1; });
+  const labels = Object.keys(counts);
+  const values = labels.map(l => counts[l]);
+  const total  = data.length;
+
+  const COLORS = ['rgba(62,207,207,0.85)','rgba(240,180,41,0.85)',
+                  'rgba(86,211,100,0.85)', 'rgba(224,92,106,0.85)'];
+
+  document.getElementById('piePlaceholder').style.display = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+
+  const defaults = getChartDefaults();
+  window.CHARTS['pieChart'] = new Chart(
+    document.getElementById(canvasId).getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          backgroundColor: COLORS.slice(0, labels.length),
+          borderColor: '#151820',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        ...defaults,
+        cutout: '55%',
+        scales: { x:{display:false}, y:{display:false} },
+        plugins: {
+          ...defaults.plugins,
+          tooltip: {
+            ...defaults.plugins.tooltip,
+            callbacks: {
+              label: ctx => `${ctx.label}: ${ctx.raw} (${((ctx.raw/total)*100).toFixed(1)}%)`
+            }
+          }
+        }
+      }
+    }
+  );
+}
   // TODO: Implement this function
   // After implementing, show the canvas:
   // document.getElementById('piePlaceholder').style.display = 'none';
