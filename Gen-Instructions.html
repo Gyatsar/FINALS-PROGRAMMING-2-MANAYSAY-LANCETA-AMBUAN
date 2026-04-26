@@ -1768,8 +1768,6 @@ function drawBarChart(canvasId, data) {
   // document.getElementById('barPlaceholder').style.display = 'none';
   // document.getElementById(canvasId).style.display = 'block';
 
-  console.warn("⚠ Student 2: drawBarChart() is not yet implemented.");
-}
 
 /**
  * STUDENT 2 TODO — drawScatterPlot(canvasId, data)
@@ -1787,13 +1785,62 @@ function drawBarChart(canvasId, data) {
  *  - Draw a simple linear regression line as a second dataset (optional bonus)
  */
 function drawScatterPlot(canvasId, data) {
+    const points = data.map(d => ({ x: d.price, y: d.rating, label: d.name }));
+
+  document.getElementById('scatterPlaceholder').style.display = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+
+  const defaults = getChartDefaults();
+  window.CHARTS['scatterChart'] = new Chart(
+    document.getElementById(canvasId).getContext('2d'), {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Books',
+          data: points,
+          backgroundColor: 'rgba(62,207,207,0.75)',
+          pointRadius: 4,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        ...defaults,
+        plugins: {
+          ...defaults.plugins,
+          tooltip: {
+            ...defaults.plugins.tooltip,
+            callbacks: {
+              label: ctx => {
+                const d = ctx.raw;
+                const title = d.label.length > 28 ? d.label.slice(0,26)+'…' : d.label;
+                return `${title} | $${d.x} | ★${d.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: { display:true, text:'Price ($)', color:'#6b748f', font:{size:10,family:'Courier Prime'} },
+            ticks: { color:'#6b748f', font:{family:'Courier Prime',size:10} },
+            grid:  { color:'#2a2f45' }
+          },
+          y: {
+            min: 3, max: 5,
+            title: { display:true, text:'User Rating', color:'#6b748f', font:{size:10,family:'Courier Prime'} },
+            ticks: { color:'#6b748f', font:{family:'Courier Prime',size:10} },
+            grid:  { color:'#2a2f45' }
+          }
+        }
+      }
+    }
+  );
+}
   // TODO: Implement this function
   // After implementing, show the canvas:
   // document.getElementById('scatterPlaceholder').style.display = 'none';
   // document.getElementById(canvasId).style.display = 'block';
 
-  console.warn("⚠ Student 2: drawScatterPlot() is not yet implemented.");
-}
+
 
 /**
  * STUDENT 2 TODO — drawHistogram(canvasId, data)
