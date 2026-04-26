@@ -1696,6 +1696,33 @@ function initCharts() {
   drawPieChart('pieChart', window.DS);
 }
 
+
+  // TODO: Call all four chart functions here
+  // drawBarChart('barChart', window.DS);
+  // drawScatterPlot('scatterChart', window.DS);
+  // drawHistogram('histChart', window.DS);
+  // drawPieChart('pieChart', window.DS);
+
+
+/**
+ * STUDENT 2 TODO — drawBarChart(canvasId, data)
+ *
+ * PURPOSE: Bar chart — Study Hours per student on x-axis, Final Score on y-axis.
+ *
+ * @param {string} canvasId - 'barChart'
+ * @param {Array}  data     - window.DS array
+ *
+ * CHART.JS GUIDE:
+ *  const ctx = document.getElementById(canvasId).getContext('2d');
+ *  new Chart(ctx, { type: 'bar', data: { labels: [...], datasets: [{ data: [...] }] } });
+ *
+ * VISUAL REQUIREMENTS:
+ *  - Labels = student first names (split on space, take index 0)
+ *  - Bars colored with the amber accent (#f0b429) at 80% opacity
+ *  - X-axis: Study Hours (numeric, sort data by studyHours ascending first)
+ *  - Y-axis: Final Score (0–100)
+ *  - Enable the legend and tooltip
+ */
 function drawBarChart(canvasId, data) {
   const byGenre = {};
   data.forEach(d => {
@@ -1736,35 +1763,6 @@ function drawBarChart(canvasId, data) {
   );
 }
 
-  // TODO: Call all four chart functions here
-  // drawBarChart('barChart', window.DS);
-  // drawScatterPlot('scatterChart', window.DS);
-  // drawHistogram('histChart', window.DS);
-  // drawPieChart('pieChart', window.DS);
-
-  console.warn("⚠ Student 2: initCharts() is not yet implemented.");
-}
-
-/**
- * STUDENT 2 TODO — drawBarChart(canvasId, data)
- *
- * PURPOSE: Bar chart — Study Hours per student on x-axis, Final Score on y-axis.
- *
- * @param {string} canvasId - 'barChart'
- * @param {Array}  data     - window.DS array
- *
- * CHART.JS GUIDE:
- *  const ctx = document.getElementById(canvasId).getContext('2d');
- *  new Chart(ctx, { type: 'bar', data: { labels: [...], datasets: [{ data: [...] }] } });
- *
- * VISUAL REQUIREMENTS:
- *  - Labels = student first names (split on space, take index 0)
- *  - Bars colored with the amber accent (#f0b429) at 80% opacity
- *  - X-axis: Study Hours (numeric, sort data by studyHours ascending first)
- *  - Y-axis: Final Score (0–100)
- *  - Enable the legend and tooltip
- */
-function drawBarChart(canvasId, data) {
   // TODO: Implement this function
   // After implementing, show the canvas:
   // document.getElementById('barPlaceholder').style.display = 'none';
