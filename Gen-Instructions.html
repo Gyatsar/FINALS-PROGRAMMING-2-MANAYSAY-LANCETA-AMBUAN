@@ -1460,6 +1460,7 @@ window.CHARTS = {};
 
 /* Called automatically when the dataset is ready (Student 1 triggers this) */
 function onDataReady() {
+    initCharts();        
   // Student 2: call your chart initializer here
   // Example: initCharts();
 
@@ -1987,8 +1988,6 @@ function drawPieChart(canvasId, data) {
   // document.getElementById('piePlaceholder').style.display = 'none';
   // document.getElementById(canvasId).style.display = 'block';
 
-  console.warn("⚠ Student 2: drawPieChart() is not yet implemented.");
-}
 
 /**
  * STUDENT 2 HELPER — getChartDefaults()
