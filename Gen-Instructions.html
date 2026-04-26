@@ -1464,7 +1464,7 @@ function onDataReady() {
   // Example: initCharts();
 
   // Student 3: call your stats renderer here
-  // Example: renderStats(window.DS);
+  renderStats(window.DS);
 
   console.log("✅ loadDataset() complete — loaded", window.DS.length, "Amazon bestseller records.");
 }
@@ -2260,36 +2260,36 @@ function renderStats(data) {
   // TODO: Implement this function
   // Hint: use try/catch so errors in your stat functions don't crash the page
   try {
-    const scores = data.map(d => d.score);
-    const hours = data.map(d => d.studyHours);
+    const ratings = data.map(d => d.rating);
+    const prices = data.map(d => d.price);
     
     // Summary cards
-    const meanScore = mean(scores);
-    const medianScore = median(scores);
-    const stdDevScore = stdDev(scores);
-    const modeScore = mode(scores);
+    const meanRating = mean(ratings);
+    const medianRating = median(ratings);
+    const stdDevRating = stdDev(ratings);
+    const modeRating = mode(ratings);
     
-    document.getElementById('statMean').textContent = meanScore;
-    document.getElementById('statMedian').textContent = medianScore;
-    document.getElementById('statStdDev').textContent = stdDevScore;
-    document.getElementById('statMode').textContent = modeScore;
+    document.getElementById('statMean').textContent = meanRating;
+    document.getElementById('statMedian').textContent = medianRating;
+    document.getElementById('statStdDev').textContent = stdDevRating;
+    document.getElementById('statMode').textContent = modeRating;
     
     // Descriptive statistics
-    const minScore = Math.min(...scores);
-    const maxScore = Math.max(...scores);
-    const rangeScore = maxScore - minScore;
-    const varScore = variance(scores);
+    const minRating = Math.min(...ratings);
+    const maxRating = Math.max(...ratings);
+    const rangeRating = maxRating - minRating;
+    const varRating = variance(ratings);
     
-    document.getElementById('dCount').textContent = scores.length;
-    document.getElementById('dMin').textContent = minScore.toFixed(2);
-    document.getElementById('dMax').textContent = maxScore.toFixed(2);
-    document.getElementById('dRange').textContent = rangeScore.toFixed(2);
-    document.getElementById('dVariance').textContent = varScore;
-    document.getElementById('dStdDev').textContent = stdDevScore;
+    document.getElementById('dCount').textContent = ratings.length;
+    document.getElementById('dMin').textContent = minRating.toFixed(2);
+    document.getElementById('dMax').textContent = maxRating.toFixed(2);
+    document.getElementById('dRange').textContent = rangeRating.toFixed(2);
+    document.getElementById('dVariance').textContent = varRating;
+    document.getElementById('dStdDev').textContent = stdDevRating;
     
-    // Regression analysis
-    const reg = linearRegression(hours, scores);
-    const r = pearsonCorr(hours, scores);
+    // Regression analysis (Price vs Rating)
+    const reg = linearRegression(prices, ratings);
+    const r = pearsonCorr(prices, ratings);
     
     // Interpret correlation strength and direction
     let strength = '';
@@ -2306,7 +2306,7 @@ function renderStats(data) {
     document.getElementById('rSlope').textContent = reg.slope;
     document.getElementById('rIntercept').textContent = reg.intercept;
     document.getElementById('rSquared').textContent = reg.rSquared;
-    document.getElementById('rEquation').textContent = `score = ${reg.slope}·hours + ${reg.intercept}`;
+    document.getElementById('rEquation').textContent = `rating = ${reg.slope}·price + ${reg.intercept}`;
   } catch (err) {
     console.error('Error in renderStats:', err);
   }
