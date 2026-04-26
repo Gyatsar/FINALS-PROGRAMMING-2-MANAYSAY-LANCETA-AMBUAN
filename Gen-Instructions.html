@@ -1685,6 +1685,57 @@ document.addEventListener('DOMContentLoaded', () => {
  *   if (window.CHARTS['barChart']) window.CHARTS['barChart'].destroy();
  */
 function initCharts() {
+  if (window.CHARTS['barChart'])     window.CHARTS['barChart'].destroy();
+  if (window.CHARTS['scatterChart']) window.CHARTS['scatterChart'].destroy();
+  if (window.CHARTS['histChart'])    window.CHARTS['histChart'].destroy();
+  if (window.CHARTS['pieChart'])     window.CHARTS['pieChart'].destroy();
+
+  drawBarChart('barChart', window.DS);
+  drawScatterPlot('scatterChart', window.DS);
+  drawHistogram('histChart', window.DS);
+  drawPieChart('pieChart', window.DS);
+}
+
+function drawBarChart(canvasId, data) {
+  const byGenre = {};
+  data.forEach(d => {
+    if (!byGenre[d.genre]) byGenre[d.genre] = [];
+    byGenre[d.genre].push(d.rating);
+  });
+  const labels = Object.keys(byGenre);
+  const avgs   = labels.map(g => {
+    const arr = byGenre[g];
+    return parseFloat((arr.reduce((s,v)=>s+v,0)/arr.length).toFixed(2));
+  });
+
+  document.getElementById('barPlaceholder').style.display = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+
+  window.CHARTS['barChart'] = new Chart(
+    document.getElementById(canvasId).getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Avg User Rating',
+          data: avgs,
+          backgroundColor: 'rgba(240,180,41,0.80)',
+          borderColor: 'rgba(240,180,41,1)',
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        ...getChartDefaults(),
+        scales: {
+          x: { ticks:{color:'#6b748f',font:{family:'Courier Prime',size:10}}, grid:{color:'#2a2f45'} },
+          y: { min:3, max:5, ticks:{color:'#6b748f',font:{family:'Courier Prime',size:10}}, grid:{color:'#2a2f45'} }
+        }
+      }
+    }
+  );
+}
+
   // TODO: Call all four chart functions here
   // drawBarChart('barChart', window.DS);
   // drawScatterPlot('scatterChart', window.DS);
