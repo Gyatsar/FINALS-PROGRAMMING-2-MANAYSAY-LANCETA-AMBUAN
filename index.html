@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DataSci Collab — Git Collaborative Project</title>
 
-  <!-- Chart.js — only dependency, loaded from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
-  <!-- Google Fonts — Courier Prime for terminal feel, DM Sans for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
@@ -102,14 +100,12 @@
       50%       { opacity: 0.3; }
     }
 
-    /* ── MAIN LAYOUT ─────────────────────────────── */
     main {
       max-width: 1300px;
       margin: 0 auto;
       padding: 40px 30px;
     }
 
-    /* ── CONTRIBUTION CARDS (instruction panels) ── */
     .contrib-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -185,7 +181,6 @@
       color: var(--text-dim);
     }
 
-    /* ── SECTION WRAPPERS ────────────────────────── */
     .section {
       margin-bottom: 56px;
     }
@@ -220,7 +215,6 @@
     .tag-s2 { background: rgba(62,207,207,0.15);  color: var(--accent2); border: 1px solid rgba(62,207,207,0.3); }
     .tag-s3 { background: rgba(224,92,106,0.15);  color: var(--accent3); border: 1px solid rgba(224,92,106,0.3); }
 
-    /* ── PANEL / CARD ────────────────────────────── */
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -228,7 +222,6 @@
       padding: 24px;
     }
 
-    /* ── TABLE STYLES ────────────────────────────── */
     .table-wrap {
       overflow-x: auto;
       border-radius: var(--radius);
@@ -283,7 +276,6 @@
 }
 .done-callout strong { display: block; margin-bottom: 4px; font-size: 0.72rem; letter-spacing: 1px; }
 
-    /* ── TOOLBAR ─────────────────────────────────── */
     .toolbar {
       display: flex;
       gap: 10px;
@@ -522,63 +514,11 @@
 
 <main>
 
-  <div class="contrib-grid">
-
-    <!-- Student 1 -->
-    <div class="contrib-card s1">
-      <div class="student-tag">Student 1 · Repo Owner</div>
-      <h3>Dataset Engine &amp; Project Setup</h3>
-      <ul>
-        <li>Initialize the GitHub repository</li>
-        <li>Implement <code>loadDataset()</code></li>
-        <li>Implement <code>renderTable()</code></li>
-        <li>Implement filter &amp; sort logic</li>
-        <li>Invite collaborators &amp; protect main</li>
-      </ul>
-      <span class="branch-tag">branch: main (setup) → feature/data-engine</span>
-    </div>
-
-    <!-- Student 2 -->
-    <div class="contrib-card s2">
-      <div class="student-tag">Student 2 · Collaborator</div>
-      <h3>Data Visualization Layer</h3>
-      <ul>
-        <li>Implement <code>drawBarChart()</code></li>
-        <li>Implement <code>drawScatterPlot()</code></li>
-        <li>Implement <code>drawHistogram()</code></li>
-        <li>Implement <code>drawPieChart()</code></li>
-        <li>Open and get PR merged into main</li>
-      </ul>
-      <span class="branch-tag">branch: feature/visualization</span>
-    </div>
-
-    <!-- Student 3 -->
-    <div class="contrib-card s3">
-      <div class="student-tag">Student 3 · Collaborator</div>
-      <h3>Statistical Analysis Engine</h3>
-      <ul>
-        <li>Implement <code>mean()</code>, <code>median()</code>, <code>mode()</code></li>
-        <li>Implement <code>stdDev()</code>, <code>variance()</code></li>
-        <li>Implement <code>pearsonCorr()</code></li>
-        <li>Implement <code>linearRegression()</code></li>
-        <li>Open and get PR merged into main</li>
-      </ul>
-      <span class="branch-tag">branch: feature/statistics</span>
-    </div>
-
-  </div>
 
   <section class="section" id="sec-data">
     <div class="section-header">
       <h2>01 · Dataset Explorer</h2>
       <span class="owner-tag tag-s1">Student 1 · Repo Owner</span>
-    </div>
-
-    <div class="done-callout">
-      <strong>✅ IMPLEMENTED — Student 1</strong>
-      All four functions implemented: <code>loadDataset()</code>, <code>renderTable(data)</code>,
-      <code>applyFilterSort()</code>, and <code>resetTable()</code>. Amazon bestsellers dataset
-      (550 records, 2009–2019) is loaded. Table renders dynamically with filter and sort controls fully wired.
     </div>
 
     <div class="panel">
@@ -631,13 +571,6 @@
       <span class="owner-tag tag-s2">Student 2 · Collaborator</span>
     </div>
 
-    <div class="todo-callout" style="border-left-color: var(--accent2); color: var(--accent2); background: rgba(62,207,207,0.06); border-color: rgba(62,207,207,0.25);">
-      <strong>✅ IMPLEMENTED — Student 2</strong>
-      Applied the four chart functions: <code>drawBarChart()</code>, <code>drawScatterPlot()</code>,
-      <code>drawHistogram()</code>, and <code>drawPieChart()</code>. Then call <code>initCharts()</code>
-      inside <code>onDataReady()</code>. Use Chart.js (already loaded).
-    </div>
-
     <div class="chart-grid">
 
       <!-- Bar Chart -->
@@ -687,13 +620,6 @@
     <div class="section-header">
       <h2>03 · Statistical Analysis</h2>
       <span class="owner-tag tag-s3">Student 3 · Collaborator</span>
-    </div>
-
-    <div class="todo-callout" style="border-left-color: var(--accent3); color: var(--accent3); background: rgba(224,92,106,0.06); border-color: rgba(224,92,106,0.25);">
-      <strong>⚠ TODO — Student 3</strong>
-      Implement all seven statistical functions and <code>renderStats(window.DS)</code>.
-      Target field: <code>rating</code> (User Rating). Correlation: <code>price</code> vs <code>rating</code>.
-      All placeholder "—" values below should be replaced by computed results.
     </div>
 
     <div class="stats-grid">
