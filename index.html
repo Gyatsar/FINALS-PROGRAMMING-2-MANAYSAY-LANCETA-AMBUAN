@@ -959,23 +959,31 @@ function onDataReady() {
   console.log("✅ loadDataset() complete — loaded", window.DS.length, "records.");
 }
 
+function normalizeNumber(value) {
+  const normalized = Number(String(value).replace(/[^0-9.-]+/g, ''));
+  return Number.isFinite(normalized) ? normalized : 0;
+}
+
 function loadDataset() {
   Papa.parse("bestsellers with categories (1).csv", {
     download: true,
     header: true,
+    dynamicTyping: true,
     skipEmptyLines: true,
+    transformHeader: header => header.trim(),
 
     complete: function(results) {
-
-      window.DS = results.data.map(row => ({
-        name: row.Name,
-        author: row.Author,
-        rating: parseFloat(row["User Rating"]),
-        reviews: parseInt(row.Reviews),
-        price: parseInt(row.Price),
-        year: parseInt(row.Year),
-        genre: row.Genre
-      }));
+      window.DS = results.data
+        .filter(row => row.Name && row.Author && row["User Rating"] !== undefined)
+        .map(row => ({
+          name: String(row.Name).trim(),
+          author: String(row.Author).trim(),
+          rating: normalizeNumber(row["User Rating"]),
+          reviews: normalizeNumber(row.Reviews),
+          price: normalizeNumber(row.Price),
+          year: normalizeNumber(row.Year),
+          genre: String(row.Genre).trim()
+        }));
 
       renderTable(window.DS);
       document.getElementById('rowCount').textContent =
@@ -1104,10 +1112,12 @@ function initCharts() {
 }
 
 function drawBarChart(canvasId, data) {
+  const validData = data.filter(d => d.genre && Number.isFinite(d.rating));
   const byGenre = {};
-  data.forEach(d => {
-    if (!byGenre[d.genre]) byGenre[d.genre] = [];
-    byGenre[d.genre].push(d.rating);
+  validData.forEach(d => {
+    const genre = d.genre || 'Unknown';
+    if (!byGenre[genre]) byGenre[genre] = [];
+    byGenre[genre].push(d.rating);
   });
   const labels = Object.keys(byGenre);
   const avgs = labels.map(g => {
@@ -1136,8 +1146,9 @@ function drawBarChart(canvasId, data) {
 }
 
 function drawScatterPlot(canvasId, data) {
+  const validData = data.filter(d => Number.isFinite(d.price) && Number.isFinite(d.rating));
   // Disable the built-in Chart.js tooltip — we'll handle clicks ourselves
-  const points = data.map(d => ({ x: d.price, y: d.rating, bookData: d }));
+  const points = validData.map(d => ({ x: d.price, y: d.rating, bookData: d }));
 
   const defaults = getChartDefaults();
   window.CHARTS['scatterChart'] = new Chart(
@@ -1200,16 +1211,17 @@ function drawScatterPlot(canvasId, data) {
     const py = clickedData.y;
 
     // Find ALL books at the same price & rating
-    const matchingBooks = data.filter(b => b.price === px && b.rating === py);
+    const matchingBooks = validData.filter(b => b.price === px && b.rating === py);
 
     showPinnedPanel(matchingBooks, px, py, evt.clientX, evt.clientY);
   });
 }
 
 function drawHistogram(canvasId, data) {
+  const validData = data.filter(d => Number.isFinite(d.rating));
   const binLabels = ['3.0–3.4','3.5–3.9','4.0–4.4','4.5–4.7','4.8–4.9','5.0'];
   const counts = [0,0,0,0,0,0];
-  data.forEach(d => {
+  validData.forEach(d => {
     const r = d.rating;
     if      (r < 3.5) counts[0]++;
     else if (r < 4.0) counts[1]++;
@@ -1244,11 +1256,12 @@ function drawHistogram(canvasId, data) {
 }
 
 function drawPieChart(canvasId, data) {
+  const validData = data.filter(d => d.genre);
   const counts = {};
-  data.forEach(d => { counts[d.genre] = (counts[d.genre] || 0) + 1; });
+  validData.forEach(d => { counts[d.genre] = (counts[d.genre] || 0) + 1; });
   const labels = Object.keys(counts);
   const values = labels.map(l => counts[l]);
-  const total  = data.length;
+  const total  = validData.length;
   const COLORS = ['rgba(62,207,207,0.85)','rgba(240,180,41,0.85)',
                   'rgba(86,211,100,0.85)', 'rgba(224,92,106,0.85)'];
 
