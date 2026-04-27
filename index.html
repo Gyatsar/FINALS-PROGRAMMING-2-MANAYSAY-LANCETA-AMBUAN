@@ -11,23 +11,6 @@
 
   <style>
     :root {
-      --bg:         #0d0f14;
-      --surface:    #151820;
-      --surface2:   #1c2030;
-      --border:     #2a2f45;
-      --accent:     #f0b429;
-      --accent2:    #3ecfcf;
-      --accent3:    #e05c6a;
-      --text:       #d4daf0;
-      --text-dim:   #6b748f;
-      --mono:       'Courier Prime', monospace;
-      --sans:       'DM Sans', sans-serif;
-      --radius:     6px;
-      --radius-lg:  12px;
-      --glow:       0 0 18px rgba(240,180,41,0.25);
-      --header-h:   72px;
-    }
-
   --bg: linear-gradient(135deg, #062c3d 0%, #04141f 45%, #000000 100%);
   --surface: rgba(10, 44, 61, 0.88);
   --surface2: rgba(6, 28, 40, 0.92);
@@ -61,29 +44,6 @@
 
     /* ── HEADER ─────────────────────────────────── */
     header {
-      background: var(--surface);
-      border-bottom: 2px solid var(--accent);
-      padding: 0 40px;
-      height: var(--header-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      box-shadow: var(--glow);
-      /* Smooth hide/show transition */
-      transform: translateY(0);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.35s ease;
-    }
-
-    header.header--hidden {
-      transform: translateY(-100%);
-      box-shadow: none;
-    }
   background: rgba(3, 20, 31, 0.92);
   border-bottom: 1px solid var(--border);
   padding: 20px 40px;
@@ -96,6 +56,10 @@
   box-shadow: var(--glow);
   backdrop-filter: blur(8px);
 }
+    header.header--hidden {
+      transform: translateY(-100%);
+      box-shadow: none;
+    }
 
     .header-left h1 {
       font-family: var(--mono);
