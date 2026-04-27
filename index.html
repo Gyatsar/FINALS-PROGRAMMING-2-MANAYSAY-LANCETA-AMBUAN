@@ -666,15 +666,24 @@ button.primary {
       <div class="toolbar">
         <input type="text" id="filterInput" placeholder="Filter by title or author..." />
         <select id="sortSelect">
-          <option value="">Sort by...</option>
-          <option value="name">Title (A–Z)</option>
-          <option value="author">Author (A–Z)</option>
-          <option value="rating">User Rating ↓</option>
-          <option value="reviews">Reviews ↓</option>
-          <option value="price">Price ↓</option>
-          <option value="year">Year ↓</option>
-          <option value="genre">Genre (A–Z)</option>
-        </select>
+  <option value="">Sort by...</option>
+  <option value="name">Title (A–Z)</option>
+  <option value="author">Author (A–Z)</option>
+
+  <option value="ratingDesc">User Rating (Highest → Lowest)</option>
+  <option value="ratingAsc">User Rating (Lowest → Highest)</option>
+
+  <option value="reviewsDesc">Reviews (Highest → Lowest)</option>
+  <option value="reviewsAsc">Reviews (Lowest → Highest)</option>
+
+  <option value="priceDesc">Price (Highest → Lowest)</option>
+  <option value="priceAsc">Price (Lowest → Highest)</option>
+
+  <option value="yearDesc">Year (Newest → Oldest)</option>
+  <option value="yearAsc">Year (Oldest → Newest)</option>
+
+  <option value="genre">Genre (A–Z)</option>
+</select>
         <button onclick="applyFilterSort()">Apply</button>
         <button onclick="resetTable()">Reset</button>
         <span class="count-badge" id="rowCount">— rows</span>
@@ -1229,18 +1238,66 @@ function renderTable(data) {
 }
 
 function applyFilterSort() {
-  const filterText = document.getElementById('filterInput').value.trim().toLowerCase();
-  const sortKey = document.getElementById('sortSelect').value;
-  let filtered = window.DS.filter(book => {
-    if (!filterText) return true;
-    return book.name.toLowerCase().includes(filterText) || book.author.toLowerCase().includes(filterText);
-  });
-  if (sortKey) {
-    filtered = filtered.slice().sort((a, b) => {
-      if (['name','author','genre'].includes(sortKey)) return a[sortKey].localeCompare(b[sortKey]);
-      return b[sortKey] - a[sortKey];
-    });
+  let filtered = [...RAW_DATA];
+
+  const keyword = document.getElementById("filterInput").value.toLowerCase().trim();
+  const sort = document.getElementById("sortSelect").value;
+
+  /* FILTER */
+  if (keyword) {
+    filtered = filtered.filter(item =>
+      item.name.toLowerCase().includes(keyword) ||
+      item.author.toLowerCase().includes(keyword)
+    );
   }
+
+  /* SORTING */
+  switch (sort) {
+    case "name":
+      filtered.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+
+    case "author":
+      filtered.sort((a, b) => a.author.localeCompare(b.author));
+      break;
+
+    case "ratingDesc":
+      filtered.sort((a, b) => b.rating - a.rating);
+      break;
+
+    case "ratingAsc":
+      filtered.sort((a, b) => a.rating - b.rating);
+      break;
+
+    case "reviewsDesc":
+      filtered.sort((a, b) => b.reviews - a.reviews);
+      break;
+
+    case "reviewsAsc":
+      filtered.sort((a, b) => a.reviews - b.reviews);
+      break;
+
+    case "priceDesc":
+      filtered.sort((a, b) => b.price - a.price);
+      break;
+
+    case "priceAsc":
+      filtered.sort((a, b) => a.price - b.price);
+      break;
+
+    case "yearDesc":
+      filtered.sort((a, b) => b.year - a.year);
+      break;
+
+    case "yearAsc":
+      filtered.sort((a, b) => a.year - b.year);
+      break;
+
+    case "genre":
+      filtered.sort((a, b) => a.genre.localeCompare(b.genre));
+      break;
+  }
+
   renderTable(filtered);
 }
 
